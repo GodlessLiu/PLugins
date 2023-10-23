@@ -20,6 +20,11 @@ const fakePlugin: PluginEntry[] = [
     name: 'PluginPlayer',
     entry: 'https://aifengliu.top/upload/aplayer.js',
     open: true
+  },
+  {
+    name: 'EditorPlayer',
+    entry: 'https://aifengliu.top/upload/Ink-mde.js',
+    open: true
   }
 ]
 
@@ -29,6 +34,7 @@ function addPluginRouter(plugin: PluginModule) {
     router.addRoute(pluginRouter)
   }
 }
+
 async function registerPlugins() {
   // TODO: register plugins
   const pluginStore = usePluginStore()
@@ -39,7 +45,7 @@ async function registerPlugins() {
     // @ts-ignore
     const PluginModule = window[plugin.name]
     if (PluginModule) {
-      pluginStore.registerPluginModule(PluginModule)
+      pluginStore.registerPluginModule(PluginModule, plugin.open)
       await addPluginRouter(PluginModule)
     }
   }
@@ -48,13 +54,13 @@ async function registerPlugins() {
 async function initApp() {
   try {
     await app.use(createPinia())
-    app.use(router)
     await registerPlugins()
   } catch (e) {
     console.error(e)
   } finally {
+    app.use(router)
     app.mount('#app')
   }
 }
 
-initApp()
+await initApp()

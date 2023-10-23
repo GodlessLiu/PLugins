@@ -10,12 +10,5 @@ const router = createRouter({
     }
   ]
 })
-router.beforeEach((to, from, next) => {
-  if (!router.hasRoute(to.name!)) {
-    next({ path: to.path, replace: true })
-  } else {
-    next()
-  }
-})
 
 export default router

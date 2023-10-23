@@ -14,4 +14,5 @@ export interface PluginModule {
   author: string
   bg?: string
   entryPoiniter?: ExtensionPoint
+  open: boolean
 }
