@@ -6,12 +6,14 @@ import '@/styles/tailwind.css'
 import { usePluginStore } from '@/stores/plugin'
 import type { PluginModule } from './types/Plugin'
 import { useScriptTag } from '@vueuse/core'
+import { loadStyle } from './utils/loadStyle'
 const app = createApp(MainApp)
 
 interface PluginEntry {
   name: string
   entry: string
   open: boolean
+  style?: string
 }
 
 const fakePlugin: PluginEntry[] = [
@@ -24,7 +26,8 @@ const fakePlugin: PluginEntry[] = [
   {
     name: 'EditorPlayer',
     entry: 'https://aifengliu.top/upload/Ink-mde.js',
-    open: true
+    open: true,
+    style: 'https://aifengliu.top/upload/ink-mde.css'
   }
 ]
 
@@ -34,12 +37,14 @@ function addPluginRouter(plugin: PluginModule) {
     router.addRoute(pluginRouter)
   }
 }
-
 async function registerPlugins() {
   // TODO: register plugins
   const pluginStore = usePluginStore()
   for (const plugin of fakePlugin) {
     if (!plugin.open) continue
+    if (plugin.style) {
+      loadStyle(plugin.style)
+    }
     const { load } = useScriptTag(plugin.entry)
     await load()
     // @ts-ignore
